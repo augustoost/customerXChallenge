@@ -1,0 +1,559 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "CustomerX Challenge",
+    "description": "Olá! esta API foi desenvolvida para o processo seletivo da CustomerX. Você poderá testar o funcionamento das rotas, clicando na rota desejada e depois no botão try it out",
+    "version": "1.0.0",
+    "contact": {
+      "name": "Augusto Ostapechen",
+      "email": "augusto_ostapechen@hotmail.com"
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "security": {
+        "type": "apiKey",
+        "name": "Authorization",
+        "in": "header",
+        "description": "Para utilizar a API é necessário efetuar o cadastro"
+      }
+    }
+  },
+  "paths": {
+    "/users": {
+      "post": {
+        "tags": ["Usuário"],
+        "summary": "Cria um novo usuário",
+        "description": "Rota utilizada para criar um novo usuário e poder utilizar a aplicação",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string"
+                  }
+                },
+                "example": {
+                  "email": "adm@email.com",
+                  "password": "1234"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created"
+          },
+          "500": {
+            "description": "Usuário já cadastrado"
+          }
+        }
+      }
+    },
+    "/customers": {
+      "post": {
+        "security": [{ "name": ["Bearer"] }],
+        "tags": ["Cliente"],
+        "summary": "Cria um novo cliente",
+        "description": "Rota utilizada para criar um novo cliente",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "emails": {
+                    "type": "array"
+                  },
+                  "phones": {
+                    "type": "array"
+                  }
+                },
+                "example": {
+                  "name": "customer name sample",
+                  "emails": ["jondoe01@email.com", "jondoe02@email.com"],
+                  "phones": ["132456789", "234567891"]
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Invalid token!"
+          },
+          "500": {
+            "description": "Cliente já cadastrado"
+          }
+        }
+      },
+      "get": {
+        "tags": ["Cliente"],
+        "summary": "Lista todos os clientes",
+        "security": [{ "name": ["Bearer"] }],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "type": "object" },
+                  "properties": {
+                    "name": { "type": "string" },
+                    "emails": { "type": "array" },
+                    "phones": { "type": "array" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": ["Cliente"],
+        "summary": "Atualiza o nome do cliente",
+        "security": [{ "name": ["Bearer"] }],
+        "parameters": [
+          {
+            "schema": {
+              "example": "695280f7-b171-4db5-b053-27058a28bd46"
+            },
+            "in": "path",
+            "name": "id",
+            "required": true
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  }
+                },
+                "example": {
+                  "name": "another name"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "404": {
+            "description": "Customer does not exists"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Cliente"],
+        "summary": "Deleta um cliente",
+        "security": [{ "name": ["Bearer"] }],
+        "parameters": [
+          {
+            "schema": {
+              "example": "695280f7-b171-4db5-b053-27058a28bd46"
+            },
+            "in": "path",
+            "name": "id",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "404": {
+            "description": "Customer does not exists"
+          }
+        }
+      }
+    },
+    "/contacts": {
+      "post": {
+        "tags": ["Contato"],
+        "summary": "Cria um novo contato",
+        "description": "Rota utilizada para criar um novo contato",
+        "security": [{ "name": ["Bearer"] }],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "emails": {
+                    "type": "array"
+                  },
+                  "phones": {
+                    "type": "array"
+                  }
+                },
+                "example": {
+                  "name": "contact name sample",
+                  "emails": ["jon01@email.com", "jon02@email.com"],
+                  "phones": ["65418952316", "65418632516"]
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created"
+          },
+          "500": {
+            "description": "Contato já cadastrado"
+          }
+        }
+      },
+      "get": {
+        "tags": ["Contato"],
+        "summary": "Lista todos os contatos",
+        "security": [{ "name": ["Bearer"] }],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "type": "object" },
+                  "properties": {
+                    "name": { "type": "string" },
+                    "emails": { "type": "array" },
+                    "phones": { "type": "array" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": ["Contato"],
+        "summary": "Atualiza o nome do contato",
+        "security": [{ "name": ["Bearer"] }],
+        "parameters": [
+          {
+            "schema": {
+              "example": "695280f7-b171-4db5-b053-27058a28bd46"
+            },
+            "in": "path",
+            "name": "id",
+            "required": true
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  }
+                },
+                "example": {
+                  "name": "another name"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "404": {
+            "description": "Contact does not exists"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Contato"],
+        "summary": "Deleta um contato",
+        "security": [{ "name": ["Bearer"] }],
+        "parameters": [
+          {
+            "schema": {
+              "example": "695280f7-b171-4db5-b053-27058a28bd46"
+            },
+            "in": "path",
+            "name": "id",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "404": {
+            "description": "Contact does not exists"
+          }
+        }
+      }
+    },
+    "/emails": {
+      "put": {
+        "tags": ["Email"],
+        "summary": "Atualiza um email",
+        "security": [{ "name": ["Bearer"] }],
+        "parameters": [
+          {
+            "schema": {
+              "example": "695280f7-b171-4db5-b053-27058a28bd46"
+            },
+            "in": "path",
+            "name": "id",
+            "required": true
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  }
+                },
+                "example": {
+                  "email": "anotheremail@email.com"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "404": {
+            "description": "Email does not exists"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Email"],
+        "summary": "Deleta um email",
+        "security": [{ "name": ["Bearer"] }],
+        "parameters": [
+          {
+            "schema": {
+              "example": "695280f7-b171-4db5-b053-27058a28bd46"
+            },
+            "in": "path",
+            "name": "id",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "404": {
+            "description": "Email does not exists"
+          }
+        }
+      }
+    },
+    "/phones": {
+      "put": {
+        "tags": ["Phone"],
+        "summary": "Atualiza um número de telefone",
+        "security": [{ "name": ["Bearer"] }],
+        "parameters": [
+          {
+            "schema": {
+              "example": "695280f7-b171-4db5-b053-27058a28bd46"
+            },
+            "in": "path",
+            "name": "id",
+            "required": true
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  }
+                },
+                "example": {
+                  "name": "12345678911"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "404": {
+            "description": "Phone does not exists"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Phone"],
+        "summary": "Deleta um número de telefone",
+        "security": [{ "name": ["Bearer"] }],
+        "parameters": [
+          {
+            "schema": {
+              "example": "695280f7-b171-4db5-b053-27058a28bd46"
+            },
+            "in": "path",
+            "name": "id",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "404": {
+            "description": "Phone does not exists"
+          }
+        }
+      }
+    },
+    "/contacts/listByCustomerId": {
+      "get": {
+        "tags": ["Contato"],
+        "summary": "Lista os contatos que estão vinculados a um determinado cliente",
+        "security": [{ "name": ["Bearer"] }],
+        "parameters": [
+          {
+            "schema": {
+              "example": "695280f7-b171-4db5-b053-27058a28bd46"
+            },
+            "in": "path",
+            "name": "id",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "type": "object" },
+                  "properties": {
+                    "name": { "type": "string" },
+                    "emails": { "type": "array" },
+                    "phones": { "type": "array" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/customers/listByCustomerId": {
+      "get": {
+        "tags": ["Cliente"],
+        "summary": "Lista um determinado cliente pelo seu id",
+        "security": [{ "name": ["Bearer"] }],
+        "parameters": [
+          {
+            "schema": {
+              "example": "695280f7-b171-4db5-b053-27058a28bd46"
+            },
+            "in": "path",
+            "name": "id",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "type": "object" },
+                  "properties": {
+                    "name": { "type": "string" },
+                    "emails": { "type": "array" },
+                    "phones": { "type": "array" }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found"
+          }
+        }
+      }
+    },
+    "/contacts/listByContactId": {
+      "get": {
+        "tags": ["Contato"],
+        "summary": "Lista um determinado contato pelo seu id",
+        "security": [{ "name": ["Bearer"] }],
+        "parameters": [
+          {
+            "schema": {
+              "example": "695280f7-b171-4db5-b053-27058a28bd46"
+            },
+            "in": "path",
+            "name": "id",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "type": "object" },
+                  "properties": {
+                    "name": { "type": "string" },
+                    "emails": { "type": "array" },
+                    "phones": { "type": "array" }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found"
+          }
+        }
+      }
+    }
+  },
+  "security": []
+}
